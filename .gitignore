@@ -1,0 +1,13 @@
+# Entornos virtuales
+env/
+venv/
+.venv/
+
+# Resultados y datos pesados
+results/
+data/
+__pycache__/
+*.pyc
+
+# Archivos del sistema
+.DS_Store
