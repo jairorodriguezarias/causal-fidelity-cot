@@ -8,7 +8,8 @@ import time
 import requests
 
 OLLAMA_URL = "http://localhost:11434"
-JUDGE_MODEL = "glm-5.2:cloud"
+#JUDGE_MODEL = "glm-5.2:cloud"
+JUDGE_MODEL = "llama3"
 JUDGE_TIMEOUT = 120
 
 JUDGE_SYSTEM_PROMPT = """You are an expert judge evaluating the causal fidelity of reasoning in language models.
