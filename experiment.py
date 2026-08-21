@@ -6,6 +6,7 @@ import torch
 import json
 import os
 import re
+import time
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
 
