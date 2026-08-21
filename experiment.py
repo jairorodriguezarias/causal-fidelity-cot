@@ -49,17 +49,27 @@ print(f"[System] Device: {device}")
 # =====================================================================
 # CORE FUNCTIONS
 # =====================================================================
+# =====================================================================
+# MODEL LOADING (ADJUSTED FOR DGX MULTI-GPU)
+# =====================================================================
 def load_model(model_id: str):
     print(f"\n[Loading] {model_id} ...")
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     dtype = torch.float16 if device.type != "cpu" else torch.float32
+    
+    # Usamos device_map="auto" para repartir el modelo en las GPUs del DGX
     model = AutoModelForCausalLM.from_pretrained(
-        model_id, torch_dtype=dtype, device_map=None, low_cpu_mem_usage=True
-    ).to(device)
+        model_id, 
+        torch_dtype=dtype, 
+        device_map="auto",  # <-- Esto reparte el modelo en múltiples GPUs
+        low_cpu_mem_usage=True
+    )
+    # No usamos .to(device) aquí porque device_map="auto" ya lo colocó
     model.eval()
     return model, tokenizer
+
 
 def _extract_last_hidden(output):
     t = output[0] if isinstance(output, tuple) else output
@@ -92,7 +102,8 @@ def compute_steering_vector(model, tokenizer, entail_prompts, contra_prompts, la
 
 class SteeringHook:
     def __init__(self, vector, alpha, k_tokens, mode="steer"):
-        self.vector = vector.to(device)
+        # No lo enviamos a device aquí todavía, lo haremos dinámicamente
+        self.vector = vector
         self.alpha = alpha
         self.k_tokens = k_tokens
         self.t = 0
@@ -102,21 +113,29 @@ class SteeringHook:
         is_tuple = isinstance(output, tuple)
         hidden = output[0] if is_tuple else output
         seq_len = hidden.shape[1] if hidden.ndim == 3 else hidden.shape[0]
+        
         if seq_len == 1 and self.t < self.k_tokens and self.mode != "none":
+            # CAMBIO CLAVE: Enviar el vector a la misma GPU que el 'hidden'
+            v = self.vector.to(hidden.device)
+            
             if self.mode == "orthogonal":
-                v = torch.randn_like(self.vector)
-                proj = (v @ self.vector) * self.vector
-                v = v - proj
-                v = (v / (torch.norm(v, p=2) + 1e-8)) * torch.norm(self.vector)
-                delta = self.alpha * v
+                v_orth = torch.randn_like(v)
+                proj = (v_orth @ v) * v
+                v_orth = v_orth - proj
+                v_orth = (v_orth / (torch.norm(v_orth, p=2) + 1e-8)) * torch.norm(v)
+                delta = self.alpha * v_orth
             elif self.mode == "gaussian":
-                delta = self.alpha * torch.randn_like(self.vector) * self.vector.std()
+                delta = self.alpha * torch.randn_like(v) * v.std()
+            else:  # steer
+                delta = self.alpha * v
+                
+            if hidden.ndim == 3:
+                hidden[:, -1, :] += delta
             else:
-                delta = self.alpha * self.vector
-            if hidden.ndim == 3: hidden[:, -1, :] += delta
-            else: hidden[-1, :] += delta
+                hidden[-1, :] += delta
             self.t += 1
         return (hidden,) + output[1:] if is_tuple else hidden
+
 
 def generate_with_steering_at_layer(model, tokenizer, prompt, v_steer, alpha, k_tokens, layer_idx, mode="steer"):
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
