@@ -2,6 +2,13 @@
 env/
 venv/
 .venv/
+.colab-env/
+
+# Local configuration and credentials
+.env
+.env.*
+.envs
+!.env.example
 
 # Resultados y datos pesados
 results/
@@ -11,3 +18,21 @@ __pycache__/
 
 # Archivos del sistema
 .DS_Store
+
+# Download caches and local build tooling
+hf_cache/
+.tools/
+.pytest_cache/
+
+# Large run artifacts are distributed separately from source
+runs/
+*.tar.gz
+/dist/
+
+# TeX intermediates
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.blg
+paper/*.synctex.gz
+paper/main.pdf

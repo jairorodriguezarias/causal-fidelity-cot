@@ -1,0 +1,14 @@
+\noindent\textbf{Draft status:} The held-out comparison is not yet complete. The table below is an execution audit, not evidence of a training-method effect.
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Run & Examples & Valid & Correct & Generations \\
+\midrule
+distill-1.5b / calibration & 4 & 1 & 0 & 51 \\
+distill-1.5b / calibration & 20 & 16 & 6 & 40 \\
+distill-7b / calibration & 20 & 16 & 16 & 40 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Valid denotes a parseable final answer. Correct uses the dataset label and counts missing answers as incorrect. Calibration observations are not held-out findings.
+The assessor passed 12 of 12 synthetic validation cases. These are engineered checks, not human judgments of generated traces.

@@ -1,0 +1,56 @@
+{
+  "passed": false,
+  "errors": [
+    "distill-1.5b: Not held-out test data",
+    "distill-1.5b: Fewer than 500 construction pairs",
+    "distill-1.5b: Fewer than 50 evaluation examples",
+    "distill-1.5b: incomplete layer/intensity sweep",
+    "Missing required held-out model: distill-7b",
+    "Missing required held-out model: distill-32b",
+    "Missing required held-out model: qwq-32b",
+    "Publication author metadata is missing",
+    "Test evidence is stale: scripts/run_campaign.py",
+    "Test evidence is stale: scripts/audit_run.py",
+    "Test evidence is stale: scripts/audit_release.py"
+  ],
+  "runs": {
+    "distill-1.5b": {
+      "passed": false,
+      "errors": [
+        "Not held-out test data",
+        "Fewer than 500 construction pairs",
+        "Fewer than 50 evaluation examples"
+      ],
+      "run": "runs/smoke-1.5b",
+      "model": "distill-1.5b",
+      "require_test": true,
+      "records": 51,
+      "expected_records": 51,
+      "conditions": {
+        "baseline": 8,
+        "steer_L0_a1.0_r0": 4,
+        "orthogonal_L0_a1.0_r0": 4,
+        "gaussian_L0_a1.0_r0": 4,
+        "steer_L14_a1.0_r0": 4,
+        "orthogonal_L14_a1.0_r0": 4,
+        "gaussian_L14_a1.0_r0": 4,
+        "steer_L27_a1.0_r0": 4,
+        "orthogonal_L27_a1.0_r0": 4,
+        "gaussian_L27_a1.0_r0": 4,
+        "truncate_0.0": 1,
+        "truncate_0.25": 1,
+        "truncate_0.5": 1,
+        "truncate_0.75": 1,
+        "truncate_1.0": 1,
+        "swap_contradiction_cot": 1,
+        "shuffle_cot": 1
+      },
+      "baseline_entailment_status": {
+        "unfinished_thought": 2,
+        "invalid_answer": 1,
+        "ok": 1
+      }
+    }
+  },
+  "scope": "Technical and coverage gate; the manuscript claims and uncertainty still require substantive review."
+}

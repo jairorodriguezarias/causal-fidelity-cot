@@ -1,0 +1,188 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,booktabs,graphicx}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\input{generated-metadata}
+\title{Causal Interventions on Chain-of-Thought in Distilled and RL-Post-Trained Models\StudyStatus}
+\author{\StudyAuthors}
+\date{\StudyDate}
+\begin{document}
+\maketitle
+\begin{abstract}
+Visible reasoning and final answers can agree without the reasoning mediating the
+model's decision. We study their relationship using two complementary interventions:
+layer-specific activation steering and direct changes to generated reasoning text.
+The protocol compares DeepSeek-R1-Distill-Qwen-32B with QwQ-32B, with smaller
+distilled checkpoints as implementation pilots. It uses premise-disjoint SNLI contrast
+pairs, per-example baselines, equal-norm random controls, complete generation records,
+and explicit missing-output accounting. Reasoning assessment is blinded to final
+answers and its consistency is reported separately from behavioral effects.
+\input{generated-abstract}
+The design measures intervention sensitivity and textual consistency; it does not
+identify a pure effect of reinforcement learning or establish causal mediation from
+reasoning--answer agreement alone.
+\end{abstract}
+
+\section{Introduction}
+Chain-of-thought (CoT) is potentially useful for inspecting model behavior, but its
+interpretation requires distinguishing plausible explanations from computations that
+influence the answer. Behavioral interventions on reasoning reveal task-dependent
+sensitivity \cite{lanham2023}, while naturally worded prompts can elicit internally
+inconsistent justifications \cite{arcuschin2025}. Pre-CoT activation probes and
+steering provide evidence that some answers can be influenced before verbal reasoning
+begins \cite{cox2026}. An information-flow account makes the stronger distinction
+between mediation through CoT and prompt-to-answer shortcuts \cite{jia2026}.
+
+Our question is how hidden-state and text interventions differ across distilled and
+RL-post-trained reasoning checkpoints. The intended contribution is a reproducible,
+controlled behavioral comparison, with failure and missingness accounting. We avoid
+equating an aligned answer change with faithful reasoning, or a robust answer with
+post-hoc rationalization.
+
+\section{Models and comparison limits}
+The distilled checkpoints are DeepSeek-R1-Distill-Qwen-1.5B, 7B and 32B
+\cite{deepseek2025}. The primary comparison is the 32B distilled checkpoint versus
+the released QwQ-32B, whose official documentation lists both supervised fine-tuning
+and reinforcement learning \cite{qwq2025}. Both use the Qwen2.5 base family at the
+same parameter scale, but their post-training data and recipes differ. This is an
+observational comparison of checkpoints under experimental inference-time
+interventions, not random assignment to SFT versus RL.
+
+Model revisions are pinned in the reproduction manifest. The planned 32B comparison
+uses the same NF4 quantization with double quantization and bfloat16 computation.
+The full-precision 1.5B run is an implementation pilot, not a quantization-controlled
+scale comparison. Quantization can change the representation geometry and is a
+limitation even when shared between models.
+
+\section{Data and protocol}
+We construct contrast pairs from SNLI \cite{bowman2015}. Each contains a premise,
+an entailment hypothesis and a contradiction hypothesis. We sample 500 pairs from
+the official training split, 50 from validation for calibration, and 50 from test
+for evaluation. Premises normalized for case and whitespace are disjoint between
+partitions. Candidate premises are shuffled before sampling. Invalid and neutral
+labels are excluded. The task is a binary contrast subset, not the conventional
+three-class SNLI benchmark. Dataset revision, seed and a checksum of all partitions
+are recorded.
+
+Prompts use each checkpoint's native chat template, an opening thought marker, and
+the instruction to produce an explicit final label. Raw text, token IDs, stop reason,
+prompt and seed are retained. Unfinished thought blocks, missing labels and invalid
+formats remain separate from valid outcomes. Calibration precedes held-out evaluation;
+all experimental settings and any changes must be recorded before test interpretation.
+
+The held-out schedule was frozen locally after the 1.5B and 7B calibration runs;
+it is not an external preregistration. It uses seed 42, temperature 0.6, top-$p$ 0.95,
+top-$k$ 20 and batches of 16. The reasoning-generation ceiling is 2,048 new tokens,
+increased from the calibration ceiling of 1,024 after observing incomplete traces.
+Answer regeneration after text interventions is limited to 128 new tokens.
+The same settings apply to the three held-out checkpoints. Every cell uses all 50
+evaluation premises, with no replacement of examples whose baselines fail.
+
+\subsection{Layer-specific activation steering}
+For layer $l$, let $h_l(x)$ be the activation at the final prompt position before the
+first generated reasoning token. Using only training pairs, compute
+\begin{equation}
+ d_l = \frac{1}{N}\sum_{i=1}^N h_l(x_i^{\rm contradiction})
+       -\frac{1}{N}\sum_{i=1}^N h_l(x_i^{\rm entailment}).
+\end{equation}
+We add $\alpha d_l$ to the residual output of layer $l$ for the first $K=15$
+prediction positions. Position one is the final prefill position, not the first
+single-token decoding call. Activations are accumulated in float32. Intensity
+is expressed in mean-difference units; it is not assumed to represent a universal
+cross-model semantic dose.
+
+We use intensities $\alpha\in\{0.5,1,2,4\}$ and relative layer positions
+$\{0,.15,.30,.45,.60,.75,.90,1\}$, rounded to the nearest zero-based layer index.
+The 28-layer checkpoint therefore uses layers $\{0,4,8,12,16,20,24,27\}$; the
+64-layer checkpoints use $\{0,9,19,28,38,47,57,63\}$. Each model has 32 semantic
+steering cells and 64 matched random-control cells. Each cell contains one seeded
+generation per premise; the study does not estimate generation-seed variability.
+
+Every evaluated example has an unsteered baseline. For each layer and intensity,
+controls use (i) a Gaussian direction projected orthogonally to $d_l$ and normalized
+to the same norm and (ii) a Gaussian direction normalized to the same norm without
+projection. Each control direction is fixed across its 15 positions and separately
+seeded by example and layer. These controls distinguish a directional effect from
+perturbation magnitude but cannot eliminate every off-manifold effect.
+
+\subsection{Direct interventions on written reasoning}
+For completed baseline traces, retain fractions $q\in\{0,.25,.50,.75,1\}$ of
+reasoning tokens, close the thought block and regenerate an answer. The $q=1$
+condition controls for the answer-regeneration procedure. We also substitute the
+reasoning from the paired contradiction-hypothesis prompt and separately shuffle the
+original reasoning tokens. These operations test answer sensitivity to the reasoning
+prefix. They do not preserve all distributional properties, and the substituted
+trace may contain information inconsistent with the original hypothesis.
+
+\subsection{Reasoning assessment}
+A separate model judges the conclusion supported by the reasoning text, without
+seeing the final answer. Its outputs are restricted to entailment, contradiction,
+mixed or unclear. Exact supporting quotations and JSON fields are validated; errors
+are preserved. A quote-based first-contradiction token index is an approximate textual
+indicator, not internal commitment time. Synthetic cases check extraction, negation,
+self-correction and empty inputs. This validation is not a substitute for independent
+human annotation of model-generated traces. Retest agreement is computed on a seeded
+sample; undefined Cohen's kappa is reported as unavailable.
+
+We derive descriptive reasoning--answer categories only after assessment. An
+entailment baseline that changes to a contradiction answer can either have aligned
+contradiction reasoning or a reasoning--answer mismatch. These labels are not proofs
+of faithfulness or deception.
+
+\section{Analysis}
+Report baseline accuracy and completion separately. Among examples whose baseline
+answer is entailment, report the contradiction-answer rate and the number of missing
+intervention answers. If $f$ observed flips and $m$ missing answers occur among $n$
+eligible examples, the missingness bounds are $[f/n,(f+m)/n]$. Complete-case rates
+receive Wilson intervals and are explicitly subject to selection bias when missingness
+depends on intervention strength.
+
+Control differences are paired by example and bootstrapped over examples, using
+5,000 resamples. Layers and intensity settings on the same example are not independent
+samples. These are exploratory intervals; the many cells require caution about
+multiplicity and selected extremes. The final checkpoint comparison must use shared
+examples, aligned relative layer positions and identical operating settings.
+
+Supplementary analyses compare each text intervention with the regenerated answer
+after the full original prefix, and quantify the full-prefix regeneration effect
+itself. These comparisons use both all eligible baselines and the originally correct
+baseline subset. Balanced baseline accuracy resamples the two hypotheses sharing
+a premise as one cluster. Activation/control comparisons additionally receive
+two-sided exact tests based on discordant pairs, with Holm adjustment within each
+model's activation/control family. Complete-case selection remains a limitation;
+missing-outcome bounds use the observed label in a partially missing pair where
+available. Cross-model and text comparisons remain exploratory.
+
+\section{Execution status and results}
+\input{generated-results}
+
+\section{Limitations}
+This study concerns a small binary NLI subset and cannot establish general-purpose
+reasoning monitorability. SNLI labels can encode pragmatic assumptions, and public
+benchmark data may have appeared in pretraining. Baseline task failure limits
+interpretation of attempted answer shifts. Limited generation budgets can introduce
+condition-dependent missingness. Model-family similarities between an assessor and
+evaluated checkpoints can introduce correlated judgments. Synthetic validation and
+retest agreement do not establish external validity.
+
+Hidden-state interventions can affect reasoning and answers through separate paths.
+Consequently, coordinated changes do not identify mediation. An unchanged answer
+after truncation may reflect redundant reasoning; a changed answer may reflect
+an unnatural prefix. The checkpoint comparison also confounds training recipe,
+training data and other post-training choices. We therefore do not infer a universal
+parameter threshold, an irrevocable commitment layer, or a causal advantage of
+SFT, RL, outcome rewards or process rewards.
+
+\section{Reproducibility}
+The repository supplies dataset and model revisions, per-run configuration hashes,
+source hashes, software versions, raw generations, preserved assessor outputs,
+analysis code and tests. Resume rejects a changed run identity. Generation hooks are
+removed even on failures. The historical v3 outputs are excluded because their
+reasoning extraction was empty and their evaluation reused one example. Source and
+result checks must pass before a submission archive can be considered complete.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

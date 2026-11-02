@@ -1,261 +1,368 @@
-"""
-Causal Fidelity of Chain-of-Thought Reasoning in Distilled vs. RL-Trained Models
-"""
+"""Reproducible activation and CoT interventions with append-only checkpoints."""
+from __future__ import annotations
+
+import argparse
+from contextlib import contextmanager
+from datetime import datetime, timezone
+import hashlib
+import importlib.metadata
+import json
+import math
+from pathlib import Path
+import random
+import shutil
+import subprocess
+import time
 
 import torch
-import json
-import os
-import re
-import time
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from tqdm import tqdm
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-from dataset_builder import build_contrast_dataset, load_contrast_dataset
-from llm_judge import judge_single, cohen_kappa
+from dataset_builder import fingerprint, load_contrast_dataset
+from evaluation import parse_output
 
-# =====================================================================
-# CONFIGURATION
-# =====================================================================
-# =====================================================================
-# CONFIGURATION — ADJUSTED FOR MAC M1 (PILOT PHASE)
-# =====================================================================
-MODELS_CONFIG = [
-    {
-        "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",  # <- Cambiado a 1.5B para tu Mac
-        "type": "distill",
-        "description": "Distillation (SFT) — Pilot model for M1",
-        "n_layers": 28,
-        "sweep_layers": [0, 4, 8, 12, 16, 20, 24, 27],
-    },
-    # Deja esto comentado. Lo usaremos en Colab o en Berkeley.
-    # {
-    #     "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-    #     "type": "distill",
-    #     "n_layers": 28,
-    #     "sweep_layers": [0, 4, 8, 12, 16, 20, 24, 27],
-    # },
-]
+ROOT = Path(__file__).resolve().parent
 
-ALPHA_SWEEP = [1.0, 2.0, 4.0, 8.0]
-K_TOKENS = 15
-MAX_NEW_TOKENS = 300
-OUTPUT_DIR = "results"
-N_CONTRAST_PAIRS = 500
-N_TEST_PROMPTS = 50
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
-print(f"[System] Device: {device}")
+def utcnow():
+    return datetime.now(timezone.utc).isoformat()
 
-# =====================================================================
-# CORE FUNCTIONS
-# =====================================================================
-# =====================================================================
-# MODEL LOADING (ADJUSTED FOR DGX MULTI-GPU)
-# =====================================================================
-def load_model(model_id: str):
-    print(f"\n[Loading] {model_id} ...")
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-    dtype = torch.float16 if device.type != "cpu" else torch.float32
-    
-    # Usamos device_map="auto" para repartir el modelo en las GPUs del DGX
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id, 
-        torch_dtype=dtype, 
-        device_map="auto",  # <-- Esto reparte el modelo en múltiples GPUs
-        low_cpu_mem_usage=True
+
+def stable_seed(*parts):
+    return int(hashlib.sha256('|'.join(map(str, parts)).encode()).hexdigest()[:8], 16)
+
+
+def write_json(path, data):
+    path = Path(path)
+    temp = path.with_suffix(path.suffix + '.tmp')
+    temp.write_text(json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
+    temp.replace(path)
+
+
+def layer_indices(n_layers, fractions):
+    return sorted(set(round(f * (n_layers-1)) for f in fractions))
+
+
+def prompt_for(tokenizer, pair, variant='entail'):
+    content = (
+        'Determine the relationship between the premise and hypothesis. '
+        'ENTAILMENT means the hypothesis follows from the premise. '
+        'CONTRADICTION means the hypothesis conflicts with the premise. '
+        'The examples in this task belong to one of these two classes. '
+        'Reason briefly, then give the final answer on its own line in exactly this format: '
+        'FINAL: ENTAILMENT or FINAL: CONTRADICTION.\n\n'
+        f"Premise: {pair['premise']}\nHypothesis: {pair[variant + '_hypothesis']}"
     )
-    # No usamos .to(device) aquí porque device_map="auto" ya lo colocó
+    prompt = tokenizer.apply_chat_template([{'role': 'user', 'content': content}],
+                                           tokenize=False, add_generation_prompt=True)
+    if not prompt.rstrip().endswith('<think>'):
+        prompt += '<think>\n'
+    return prompt
+
+
+def load_model(config):
+    kwargs = {'revision': config['revision'], 'cache_dir': str(ROOT / 'hf_cache/hub'),
+              'local_files_only': True}
+    tokenizer = AutoTokenizer.from_pretrained(config['id'], **kwargs)
+    tokenizer.padding_side = 'left'
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    load_kwargs = {'dtype': torch.bfloat16 if torch.cuda.is_available() else torch.float32,
+                   'device_map': {'': 0} if torch.cuda.is_available() else {'': 'cpu'},
+                   'attn_implementation': 'sdpa'}
+    if config['quantization'] == 'nf4':
+        if not torch.cuda.is_available():
+            raise RuntimeError('NF4 study requires CUDA')
+        load_kwargs['quantization_config'] = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_quant_type='nf4',
+            bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=torch.bfloat16)
+    model = AutoModelForCausalLM.from_pretrained(config['id'], **kwargs, **load_kwargs)
     model.eval()
     return model, tokenizer
 
 
-def _extract_last_hidden(output):
-    t = output[0] if isinstance(output, tuple) else output
-    if t.ndim == 3: return t[:, -1, :].squeeze(0).detach().clone()
-    elif t.ndim == 2: return t[-1, :].detach().clone()
-    raise ValueError(f"Unexpected shape: {t.shape}")
+def hidden_tensor(output):
+    return output[0] if isinstance(output, tuple) else output
 
-def get_activation(model, tokenizer, prompt, layer_idx):
-    activation = None
-    def hook_fn(module, inp, out):
-        nonlocal activation
-        activation = _extract_last_hidden(out)
-    if layer_idx >= len(model.model.layers):
-        return torch.zeros(model.config.hidden_size, device=device)
-    handle = model.model.layers[layer_idx].register_forward_hook(hook_fn)
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    with torch.no_grad(): model(**inputs)
-    handle.remove()
-    return activation
-
-def compute_steering_vector(model, tokenizer, entail_prompts, contra_prompts, layer_idx):
-    e_acts = [get_activation(model, tokenizer, p, layer_idx) for p in entail_prompts]
-    c_acts = [get_activation(model, tokenizer, p, layer_idx) for p in contra_prompts]
-    mu_e = torch.stack(e_acts).mean(dim=0)
-    mu_c = torch.stack(c_acts).mean(dim=0)
-    direction = mu_c - mu_e
-    norm = torch.norm(direction, p=2)
-    if norm.item() < 1e-8: return direction, 0.0
-    return direction / norm, norm.item()
 
 class SteeringHook:
-    def __init__(self, vector, alpha, k_tokens, mode="steer"):
-        # No lo enviamos a device aquí todavía, lo haremos dinámicamente
-        self.vector = vector
-        self.alpha = alpha
-        self.k_tokens = k_tokens
-        self.t = 0
-        self.mode = mode
+    """Change the hidden state predicting tokens 1..K, including prompt prefill."""
+    def __init__(self, delta, k_tokens):
+        self.delta, self.k_tokens, self.calls, self.applied = delta, k_tokens, 0, 0
 
-    def __call__(self, module, inp, output):
-        is_tuple = isinstance(output, tuple)
-        hidden = output[0] if is_tuple else output
-        seq_len = hidden.shape[1] if hidden.ndim == 3 else hidden.shape[0]
-        
-        if seq_len == 1 and self.t < self.k_tokens and self.mode != "none":
-            # CAMBIO CLAVE: Enviar el vector a la misma GPU que el 'hidden'
-            v = self.vector.to(hidden.device)
-            
-            if self.mode == "orthogonal":
-                v_orth = torch.randn_like(v)
-                proj = (v_orth @ v) * v
-                v_orth = v_orth - proj
-                v_orth = (v_orth / (torch.norm(v_orth, p=2) + 1e-8)) * torch.norm(v)
-                delta = self.alpha * v_orth
-            elif self.mode == "gaussian":
-                delta = self.alpha * torch.randn_like(v) * v.std()
-            else:  # steer
-                delta = self.alpha * v
-                
-            if hidden.ndim == 3:
-                hidden[:, -1, :] += delta
-            else:
-                hidden[-1, :] += delta
-            self.t += 1
-        return (hidden,) + output[1:] if is_tuple else hidden
+    def __call__(self, module, inputs, output):
+        if self.calls < self.k_tokens:
+            hidden = hidden_tensor(output).clone()
+            delta = self.delta.to(device=hidden.device, dtype=hidden.dtype)
+            hidden[:, -1, :] = hidden[:, -1, :] + delta
+            output = (hidden,) + output[1:] if isinstance(output, tuple) else hidden
+            self.applied += 1
+        self.calls += 1
+        return output
 
 
-def generate_with_steering_at_layer(model, tokenizer, prompt, v_steer, alpha, k_tokens, layer_idx, mode="steer"):
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    hook = SteeringHook(v_steer, alpha, k_tokens, mode=mode)
-    handle = model.model.layers[layer_idx].register_forward_hook(hook)
-    with torch.no_grad():
-        out_ids = model.generate(**inputs, max_new_tokens=MAX_NEW_TOKENS, do_sample=False, pad_token_id=tokenizer.eos_token_id)
-    handle.remove()
-    return tokenizer.decode(out_ids[0], skip_special_tokens=False)
-
-# CORREGIDO: Usar etiquetas nativas <think> y
-def parse_cot_answer(text):
-    match = re.search(r'<think>(.*?)', text, re.DOTALL)
-    cot = match.group(1).strip() if match else ""
-    parts = text.split("</think>")
-    ans = parts[-1].strip() if len(parts) > 1 else ""
-    return cot, ans
-
-# =====================================================================
-# MAIN PIPELINE
-# =====================================================================
-def run_experiment_for_model(model_cfg, dataset):
-    model_id = model_cfg["id"]
-    model_type = model_cfg["type"]
-    sweep_layers = model_cfg["sweep_layers"]
-    model_name = model_id.split("/")[-1]
-
-    model, tokenizer = load_model(model_id)
-    contrast_pairs = dataset[:N_CONTRAST_PAIRS - N_TEST_PROMPTS]
-    test_pairs = dataset[-N_TEST_PROMPTS:]
-
-    entail_prompts_train = [p["entail_prompt"] for p in contrast_pairs]
-    contra_prompts_train = [p["contra_prompt"] for p in contrast_pairs]
-    test_prompts = [p["entail_prompt"] for p in test_pairs]
-    test_contexts = [f"Context: {p['premise']} Hypothesis: {p['entail_hypothesis']}" for p in test_pairs]
-
-    all_results = {"model": model_id, "type": model_type, "layer_sweep": {}, "red_teaming": {}, "kappa": None}
-
-    print(f"\nPHASE 2-3: Layer-Sweep — {model_name} ({model_type})")
-    for layer_idx in tqdm(sweep_layers, desc=f"Layers ({model_type})"):
-        v_steer, norm = compute_steering_vector(model, tokenizer, entail_prompts_train, contra_prompts_train, layer_idx)
-        if norm < 1e-8: continue
-
-        for alpha in ALPHA_SWEEP:
-            n_test_per_cell = max(1, N_TEST_PROMPTS // (len(sweep_layers) * len(ALPHA_SWEEP)))
-            for i in range(n_test_per_cell):
-                idx = i % len(test_prompts)
-                output_text = generate_with_steering_at_layer(model, tokenizer, test_prompts[idx], v_steer, alpha, K_TOKENS, layer_idx, mode="steer")
-                cot, ans = parse_cot_answer(output_text)
-
-                key = f"L{layer_idx}_a{alpha}_i{i}"
-                all_results["layer_sweep"][key] = {
-                    "layer": layer_idx, "alpha": alpha, "test_index": idx,
-                    "cot_text": cot[:500], "answer_text": ans[:500],
-                    "full_output": output_text[:1000], "test_context": test_contexts[idx],
-                }
-
-    print(f"\nPHASE 4: LLM-as-a-Judge — {model_name}")
-    for key, entry in tqdm(all_results["layer_sweep"].items(), desc="Judging"):
-        judgment = judge_single(entry["cot_text"], entry["answer_text"], entry["test_context"])
-        entry["judge_category"] = judgment.get("categoria", "AMBIGUOUS")
-        entry["judge_reasoning"] = judgment.get("razonamiento", "")
-        entry["judge_drift_distance"] = judgment.get("distancia_deriva", 0)
-        time.sleep(0.3)
-
-    print("  Computing Cohen's Kappa (test-retest on 20 samples)...")
-    sample_keys = list(all_results["layer_sweep"].keys())[:20]
-    sample_results = [all_results["layer_sweep"][k] for k in sample_keys]
-    first_labels = [r["judge_category"] for r in sample_results]
-    second_labels = []
-    for r in tqdm(sample_results, desc="Re-judging"):
-        j = judge_single(r["cot_text"], r["answer_text"], r["test_context"])
-        second_labels.append(j.get("categoria", "AMBIGUOUS"))
-        time.sleep(0.3)
-    kappa = cohen_kappa(first_labels, second_labels)
-    all_results["kappa"] = kappa
-    print(f"  Cohen's Kappa: {kappa:.3f}")
-
-    print(f"\nPHASE 5: Red-Teaming — {model_name}")
-    control_layer = sweep_layers[len(sweep_layers) // 2]
-    v_steer, _ = compute_steering_vector(model, tokenizer, entail_prompts_train, contra_prompts_train, control_layer)
-    for mode in ["steer", "orthogonal", "gaussian", "none"]:
-        output_text = generate_with_steering_at_layer(model, tokenizer, test_prompts[0], v_steer, 4.0, K_TOKENS, control_layer, mode=mode)
-        cot, ans = parse_cot_answer(output_text)
-        judgment = judge_single(cot, ans, test_contexts[0])
-        all_results["red_teaming"][mode] = {"judge_category": judgment.get("categoria", "AMBIGUOUS")}
-        print(f"  [{mode:>10s}] -> {judgment.get('categoria', '?')}")
-
-    out_file = os.path.join(OUTPUT_DIR, f"{model_name}_v3.json")
-    with open(out_file, "w", encoding="utf-8") as f:
-        json.dump(all_results, f, ensure_ascii=False, indent=2)
-    print(f"\n[Saved] {out_file}")
-    del model
-    return all_results
-
-if __name__ == "__main__":
-    if not os.path.exists("data/contrast_dataset.json"):
-        print("\n[1/4] Building SNLI dataset...")
-        build_contrast_dataset(n_pairs=N_CONTRAST_PAIRS)
-    print("\n[2/4] Loading dataset...")
-    dataset = load_contrast_dataset()
-
-    print("\n[3/4] Verifying Ollama judge...")
-    import requests
+@contextmanager
+def steering_hook(model, layer, delta, k_tokens):
+    hook = SteeringHook(delta, k_tokens)
+    handle = model.model.layers[layer].register_forward_hook(hook)
     try:
-        r = requests.get("http://localhost:11434/api/tags", timeout=5)
-        if "glm-5.2:cloud" not in [m["name"] for m in r.json().get("models", [])]:
-            print("  WARNING: Run 'ollama pull glm-5.2:cloud' first!")
-    except Exception:
-        print("  WARNING: Ollama not running. Run 'ollama serve'")
-        exit(1)
+        yield hook
+    finally:
+        handle.remove()
 
-    print("\n[4/4] Running experiment...")
-    all_experiments = {}
-    for cfg in MODELS_CONFIG:
-        all_experiments[cfg["id"]] = run_experiment_for_model(cfg, dataset)
 
-    print(f"\n{'='*60}\nSUMMARY\n{'='*60}")
-    for mid, res in all_experiments.items():
-        cats = [v.get("judge_category", "?") for v in res.get("layer_sweep", {}).values()]
-        total = len(cats) if cats else 1
-        print(f"  {mid}\n    FAITHFUL: {cats.count('FAITHFUL_SHIFT')}/{total}\n    THEATER: {cats.count('REASONING_THEATER')}/{total}\n    Kappa: {res.get('kappa', 0):.3f}")
+def intervention_delta(direction, alpha, mode, example_ids, seed, layer):
+    direction = direction.float().cpu()
+    norm = direction.norm()
+    if not torch.isfinite(norm) or norm < 1e-8:
+        raise ValueError('Degenerate steering direction')
+    unit = direction / norm
+    vectors = []
+    for example_id in example_ids:
+        if mode == 'steer':
+            vector = direction
+        else:
+            generator = torch.Generator().manual_seed(stable_seed(seed, example_id, layer, mode))
+            vector = torch.randn(direction.shape, generator=generator)
+            if mode == 'orthogonal':
+                vector = vector - torch.dot(vector, unit) * unit
+            elif mode != 'gaussian':
+                raise ValueError(f'Unknown control: {mode}')
+            # Gaussian directions are normalized for an exact magnitude match.
+            vector = vector / vector.norm() * norm
+        vectors.append(alpha * vector)
+    return torch.stack(vectors)
+
+
+def extract_vectors(model, tokenizer, pairs, layers, batch_size):
+    if not layers:
+        return {}, {}
+    sums = {variant: {l: torch.zeros(model.config.hidden_size, dtype=torch.float32) for l in layers}
+            for variant in ('entail', 'contra')}
+    norms = {l: 0.0 for l in layers}
+    device = model.get_input_embeddings().weight.device
+    for variant in ('entail', 'contra'):
+        for start in range(0, len(pairs), batch_size):
+            prompts = [prompt_for(tokenizer, p, variant) for p in pairs[start:start+batch_size]]
+            inputs = tokenizer(prompts, padding=True, return_tensors='pt', add_special_tokens=False).to(device)
+            handles = []
+            def make_hook(layer):
+                def capture(module, inp, output):
+                    activation = hidden_tensor(output)[:, -1, :].detach().float()
+                    sums[variant][layer].add_(activation.sum(0).cpu())
+                    norms[layer] += activation.norm(dim=-1).sum().item()
+                return capture
+            try:
+                for layer in layers:
+                    handles.append(model.model.layers[layer].register_forward_hook(make_hook(layer)))
+                with torch.inference_mode():
+                    model(**inputs, use_cache=False, logits_to_keep=1)
+            finally:
+                for handle in handles:
+                    handle.remove()
+            print(json.dumps({'stage': 'vectors', 'variant': variant,
+                              'done': min(start+batch_size, len(pairs)), 'total': len(pairs)}), flush=True)
+    vectors = {l: (sums['contra'][l] - sums['entail'][l]) / len(pairs) for l in layers}
+    metadata = {str(l): {'difference_norm': vectors[l].norm().item(),
+                         'mean_activation_norm': norms[l] / (2*len(pairs))} for l in layers}
+    return vectors, metadata
+
+
+def generate_batch(model, tokenizer, prompts, generation, seed, delta=None, layer=None, k_tokens=15):
+    torch.manual_seed(seed)
+    device = model.get_input_embeddings().weight.device
+    inputs = tokenizer(prompts, padding=True, return_tensors='pt', add_special_tokens=False).to(device)
+    settings = dict(generation)
+    settings.update(pad_token_id=tokenizer.pad_token_id, use_cache=True)
+    start = time.monotonic()
+    applied = 0
+    with torch.inference_mode():
+        if delta is None:
+            output = model.generate(**inputs, **settings)
+        else:
+            with steering_hook(model, layer, delta, k_tokens) as hook:
+                output = model.generate(**inputs, **settings)
+                applied = hook.applied
+    sequences = output[:, inputs['input_ids'].shape[1]:].cpu().tolist()
+    eos = model.generation_config.eos_token_id
+    eos = set(eos if isinstance(eos, list) else [eos])
+    records = []
+    for ids in sequences:
+        stop = next((i for i, token in enumerate(ids) if token in eos), None)
+        ids = ids if stop is None else ids[:stop+1]
+        text = tokenizer.decode(ids, skip_special_tokens=False)
+        records.append({'generated_text': text, 'generated_token_ids': ids,
+                        'generated_tokens': len(ids), 'finish_reason': 'eos' if stop is not None else 'length',
+                        'hook_steps': min(applied, len(ids)),
+                        'batch_elapsed_seconds': time.monotonic() - start})
+    return records
+
+
+class RunStore:
+    def __init__(self, folder, manifest):
+        self.folder = Path(folder)
+        self.folder.mkdir(parents=True, exist_ok=True)
+        self.path = self.folder / 'records.jsonl'
+        self.manifest_path = self.folder / 'manifest.json'
+        self.records = {}
+        if self.manifest_path.exists():
+            previous = json.loads(self.manifest_path.read_text())
+            if previous['identity'] != manifest['identity']:
+                raise ValueError('Run manifest differs; choose a new output directory')
+        else:
+            write_json(self.manifest_path, manifest)
+        if self.path.exists():
+            lines = self.path.read_text().splitlines()
+            for i, line in enumerate(lines):
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    raise ValueError(f'Interrupted JSONL line {i+1}; preserve and repair before resume')
+                if record['key'] in self.records:
+                    raise ValueError(f"Duplicate record: {record['key']}")
+                self.records[record['key']] = record
+
+    def append(self, record):
+        if record['key'] in self.records:
+            raise ValueError('Duplicate record')
+        with self.path.open('a') as output:
+            output.write(json.dumps(record, ensure_ascii=False, allow_nan=False) + '\n')
+            output.flush()
+        self.records[record['key']] = record
+        write_json(self.folder / 'status.json', {'state': 'running', 'records': len(self.records),
+                                                'last_key': record['key'], 'updated': utcnow()})
+
+
+def run(config, model_name, output, dataset_path):
+    dataset = load_contrast_dataset(dataset_path)
+    model_config = json.loads((ROOT / 'configs/models.json').read_text())[model_name]
+    train = dataset['splits']['train'][:config['train_pairs']]
+    test = dataset['splits'][config['evaluation_split']][:config['eval_pairs']]
+    if len(train) < config['train_pairs'] or len(test) < config['eval_pairs']:
+        raise ValueError('Dataset smaller than requested configuration')
+    source_hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                     for name in ('experiment.py', 'dataset_builder.py', 'evaluation.py')}
+    identity = fingerprint({'config': config, 'model': model_config, 'dataset': dataset['sha256'],
+                            'source': source_hashes})
+    manifest = {'schema_version': 4, 'identity': identity, 'created': utcnow(), 'config': config,
+                'model_name': model_name, 'model': model_config, 'dataset_sha256': dataset['sha256'],
+                'dataset_revision': dataset['revision'], 'source_sha256': source_hashes,
+                'versions': {p: importlib.metadata.version(p) for p in
+                             ('torch', 'transformers', 'bitsandbytes', 'accelerate', 'datasets')},
+                'gpu': torch.cuda.get_device_name() if torch.cuda.is_available() else 'cpu',
+                'train_ids': [p['id'] for p in train], 'eval_ids': [p['id'] for p in test]}
+    store = RunStore(output, manifest)
+    snapshot_dir = Path(output) / 'source'
+    snapshot_dir.mkdir(exist_ok=True)
+    for name, expected_hash in source_hashes.items():
+        destination = snapshot_dir / name
+        if not destination.exists():
+            shutil.copy2(ROOT / name, destination)
+        if hashlib.sha256(destination.read_bytes()).hexdigest() != expected_hash:
+            raise ValueError(f'Source snapshot mismatch: {name}')
+    model, tokenizer = load_model(model_config)
+    layers = layer_indices(len(model.model.layers), config['layer_fractions'])
+    vectors_path = Path(output) / 'vectors.pt'
+    if vectors_path.exists():
+        vectors = torch.load(vectors_path, map_location='cpu', weights_only=True)
+    else:
+        vectors, norms = extract_vectors(model, tokenizer, train, layers, config['batch_size'])
+        torch.save(vectors, vectors_path)
+        write_json(Path(output) / 'vectors.json', norms)
+    generation = config['generation']
+    batch_size = config['batch_size']
+    expected_keys = set()
+
+    def execute(condition, pairs, variant='entail', build_prompt=None, parse_prefix=None):
+        name = condition['name']
+        for start in range(0, len(pairs), batch_size):
+            batch_all = pairs[start:start+batch_size]
+            keys = [f"{name}/{p['id']}/{variant}" for p in batch_all]
+            expected_keys.update(keys)
+            # Regenerate a partial batch in full to preserve random-number consumption on resume.
+            if all(key in store.records for key in keys):
+                continue
+            prompts = [(build_prompt(p) if build_prompt else prompt_for(tokenizer, p, variant)) for p in batch_all]
+            seed = stable_seed(config['seed'], start, variant, condition.get('replicate', 0))
+            delta = None
+            if condition['kind'] == 'activation':
+                layer = condition['layer']
+                delta = intervention_delta(vectors[layer], condition['alpha'], condition['mode'],
+                                           [p['id'] for p in batch_all],
+                                           stable_seed(config['seed'], condition.get('replicate', 0)), layer)
+            settings = dict(generation)
+            if condition['kind'] == 'text':
+                settings['max_new_tokens'] = config['answer_max_tokens']
+            results = generate_batch(model, tokenizer, prompts, settings, seed,
+                                     delta=delta, layer=condition.get('layer'), k_tokens=config['k_tokens'])
+            for pair, key, prompt, result in zip(batch_all, keys, prompts, results):
+                if key in store.records:
+                    continue
+                text = result['generated_text']
+                if parse_prefix:
+                    text = parse_prefix(pair) + text
+                parsed = parse_output(text)
+                record = {'key': key, 'example_id': pair['id'], 'variant': variant,
+                          'context': {'premise': pair['premise'], 'hypothesis': pair[variant + '_hypothesis']},
+                          'gold_label': 'ENTAILMENT' if variant == 'entail' else 'CONTRADICTION',
+                          'condition': condition, 'seed': seed, 'prompt': prompt,
+                          'parsed': parsed.asdict(), **result}
+                store.append(record)
+            print(json.dumps({'stage': name, 'done': min(start+batch_size, len(pairs)),
+                              'total': len(pairs), 'records': len(store.records)}), flush=True)
+
+    execute({'name': 'baseline', 'kind': 'baseline'}, test)
+    if config.get('text_interventions') or config.get('both_baseline_variants'):
+        execute({'name': 'baseline', 'kind': 'baseline'}, test, variant='contra')
+    for layer in layers:
+        for alpha in config['alphas']:
+            for mode in config['modes']:
+                replicates = config['control_replicates'] if mode != 'steer' else 1
+                for replicate in range(replicates):
+                    condition = {'name': f'{mode}_L{layer}_a{alpha}_r{replicate}', 'kind': 'activation',
+                                 'layer': layer, 'layer_fraction': layer/(len(model.model.layers)-1),
+                                 'alpha': alpha, 'mode': mode, 'replicate': replicate,
+                                 'alpha_units': 'training_mean_difference_norm'}
+                    execute(condition, test)
+    skipped = []
+    if config.get('text_interventions'):
+        valid = [p for p in test if store.records[f"baseline/{p['id']}/entail"]['parsed']['status'] == 'ok']
+        skipped = [p['id'] for p in test if p not in valid]
+        cot_ids = {p['id']: tokenizer.encode(store.records[f"baseline/{p['id']}/entail"]['parsed']['cot'],
+                                            add_special_tokens=False) for p in valid}
+        for fraction in config['truncation_fractions']:
+            prefixes = {p['id']: tokenizer.decode(cot_ids[p['id']][:math.floor(len(cot_ids[p['id']])*fraction)],
+                                                  skip_special_tokens=False) + '\n</think>\n\n' for p in valid}
+            execute({'name': f'truncate_{fraction}', 'kind': 'text', 'fraction': fraction}, valid,
+                    build_prompt=lambda p: prompt_for(tokenizer, p) + prefixes[p['id']],
+                    parse_prefix=lambda p: '<think>' + prefixes[p['id']])
+        if config.get('swap_cot'):
+            swap_valid = [p for p in valid if store.records[f"baseline/{p['id']}/contra"]['parsed']['status'] == 'ok']
+            prefixes = {p['id']: store.records[f"baseline/{p['id']}/contra"]['parsed']['cot'] + '\n</think>\n\n'
+                        for p in swap_valid}
+            execute({'name': 'swap_contradiction_cot', 'kind': 'text'}, swap_valid,
+                    build_prompt=lambda p: prompt_for(tokenizer, p) + prefixes[p['id']],
+                    parse_prefix=lambda p: '<think>' + prefixes[p['id']])
+            shuffled = {}
+            for p in valid:
+                ids = list(cot_ids[p['id']])
+                random.Random(stable_seed(config['seed'], p['id'], 'shuffle')).shuffle(ids)
+                shuffled[p['id']] = tokenizer.decode(ids, skip_special_tokens=False) + '\n</think>\n\n'
+            execute({'name': 'shuffle_cot', 'kind': 'text'}, valid,
+                    build_prompt=lambda p: prompt_for(tokenizer, p) + shuffled[p['id']],
+                    parse_prefix=lambda p: '<think>' + shuffled[p['id']])
+    if not expected_keys.issubset(store.records):
+        raise RuntimeError('Incomplete run')
+    write_json(Path(output) / 'status.json', {'state': 'complete', 'records': len(store.records),
+                                             'expected_records': len(expected_keys),
+                                             'truncation_excluded_incomplete_baselines': skipped,
+                                             'updated': utcnow()})
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--config', required=True)
+    parser.add_argument('--model', required=True)
+    parser.add_argument('--output', required=True)
+    parser.add_argument('--dataset', default='artifacts/dataset.json')
+    args = parser.parse_args()
+    run(json.loads(Path(args.config).read_text()), args.model, args.output, args.dataset)

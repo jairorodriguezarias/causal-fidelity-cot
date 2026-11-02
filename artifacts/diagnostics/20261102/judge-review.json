@@ -1,0 +1,2312 @@
+{
+  "schema_version": 1,
+  "review_type": "exploratory_assistant_review_not_human_gold",
+  "created_at": "2026-11-02T08:44:00.734208+00:00",
+  "source_run": "runs/study-20260925/distill-7b",
+  "source_sha256": {
+    "records.jsonl": "d3dabc3647bb79d58a7f3f863ea42f131199743b7ecf40119e7e75d1882ebb45",
+    "judgments.jsonl": "0878f3d27e6d5ac82d386e1d091365f76c45f012745ac97376723f7f1d484b51"
+  },
+  "selection": {
+    "flagged": "All 28 ANSWER_REASONING_MISMATCH and all 14 REVERSE_MISMATCH, in original judgments.jsonl order.",
+    "random_non_mismatch": {
+      "population_categories": [
+        "NO_OBSERVED_SHIFT",
+        "ALIGNED_SHIFT"
+      ],
+      "population_n": 3719,
+      "seed": 20261102,
+      "method": "random.Random(seed).shuffle in original file order; first 20",
+      "n": 20
+    },
+    "random_aligned_supplement": {
+      "population_category": "ALIGNED_SHIFT",
+      "population_n": 178,
+      "seed": 20261103,
+      "method": "random.Random(seed).shuffle in original file order; first 10",
+      "n": 10
+    }
+  },
+  "review_protocol": [
+    "Read entire selected CoTs including self-corrections; classify their ultimate stated conclusion under the frozen judge rubric.",
+    "Do not substitute the reviewer's own NLI answer for the conclusion stated.",
+    "An explicit final contradiction conclusion counts as CONTRADICTION even if its supporting logic is wrong.",
+    "Non-entailment, insufficient information or neither maps to UNCLEAR unless the text actually concludes incompatibility.",
+    "Original answers, verdicts and categories were visible: this is not blinded independent human annotation.",
+    "Confidence is qualitative. Borderline cases retain alternative readings. No inference endpoint was called."
+  ],
+  "summary_by_selection": {
+    "all_flagged": {
+      "n": 42,
+      "unique_examples": 8,
+      "unique_cot_texts": 23,
+      "changed": 42,
+      "confidence_counts": {
+        "high": 39,
+        "medium": 3
+      },
+      "original_category_counts": {
+        "REVERSE_MISMATCH": 14,
+        "ANSWER_REASONING_MISMATCH": 28
+      },
+      "proposed_category_counts": {
+        "AMBIGUOUS": 16,
+        "ALIGNED_SHIFT": 18,
+        "NO_OBSERVED_SHIFT": 8
+      }
+    },
+    "random_non_mismatch": {
+      "n": 20,
+      "unique_examples": 13,
+      "unique_cot_texts": 20,
+      "changed": 0,
+      "confidence_counts": {
+        "high": 20
+      },
+      "original_category_counts": {
+        "NO_OBSERVED_SHIFT": 20
+      },
+      "proposed_category_counts": {
+        "NO_OBSERVED_SHIFT": 20
+      }
+    },
+    "random_aligned_supplement": {
+      "n": 10,
+      "unique_examples": 5,
+      "unique_cot_texts": 7,
+      "changed": 0,
+      "confidence_counts": {
+        "high": 9,
+        "medium": 1
+      },
+      "original_category_counts": {
+        "ALIGNED_SHIFT": 10
+      },
+      "proposed_category_counts": {
+        "ALIGNED_SHIFT": 10
+      }
+    }
+  },
+  "category_transitions": [
+    {
+      "existing": "ALIGNED_SHIFT",
+      "proposed": "ALIGNED_SHIFT",
+      "n": 10
+    },
+    {
+      "existing": "ANSWER_REASONING_MISMATCH",
+      "proposed": "ALIGNED_SHIFT",
+      "n": 18
+    },
+    {
+      "existing": "ANSWER_REASONING_MISMATCH",
+      "proposed": "AMBIGUOUS",
+      "n": 10
+    },
+    {
+      "existing": "NO_OBSERVED_SHIFT",
+      "proposed": "NO_OBSERVED_SHIFT",
+      "n": 20
+    },
+    {
+      "existing": "REVERSE_MISMATCH",
+      "proposed": "AMBIGUOUS",
+      "n": 6
+    },
+    {
+      "existing": "REVERSE_MISMATCH",
+      "proposed": "NO_OBSERVED_SHIFT",
+      "n": 8
+    }
+  ],
+  "identical_input_check": {
+    "assessment_status": "ok",
+    "distinct_inputs": 2451,
+    "conflicting_input_groups": 17,
+    "rows_in_conflicting_groups": 110,
+    "groups": [
+      {
+        "input_sha256": "39166f6205bdfa1b2fd536db88f6e146eb57257e49c8583c279d0b5257e8e96b",
+        "rows": 10,
+        "verdict_counts": {
+          "ENTAILMENT": 7,
+          "CONTRADICTION": 3
+        },
+        "records": [
+          {
+            "key": "baseline/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a0.5_r0/54928c608d47f9ab/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a0.5_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a1.0_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a1.0_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a2.0_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a2.0_r0/54928c608d47f9ab/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a2.0_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a4.0_r0/54928c608d47f9ab/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a4.0_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "804ec9eb3199e4ca13eef4326cddd43333701382f5bbf6b071be6536ee859b6c",
+        "rows": 14,
+        "verdict_counts": {
+          "CONTRADICTION": 11,
+          "UNCLEAR": 3
+        },
+        "records": [
+          {
+            "key": "baseline/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L0_a1.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L4_a4.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L8_a2.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L12_a0.5_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L16_a1.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L16_a2.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a2.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a4.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a0.5_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a0.5_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a1.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a1.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a2.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "a57ed99a4c84b92ae9ab50b042ae448067370deafad8e738777658c71ad4b88a",
+        "rows": 15,
+        "verdict_counts": {
+          "CONTRADICTION": 13,
+          "ENTAILMENT": 2
+        },
+        "records": [
+          {
+            "key": "baseline/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L8_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L16_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a4.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L24_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "648c8c7df514c8435307ceec4242977b7d5c57174c14125cb9f5cc917a0cf48c",
+        "rows": 6,
+        "verdict_counts": {
+          "UNCLEAR": 2,
+          "CONTRADICTION": 4
+        },
+        "records": [
+          {
+            "key": "baseline/4e9006a5204c542a/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a0.5_r0/4e9006a5204c542a/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a0.5_r0/4e9006a5204c542a/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L27_a1.0_r0/4e9006a5204c542a/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a1.0_r0/4e9006a5204c542a/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L27_a2.0_r0/4e9006a5204c542a/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "fe46635926f9ae6a28f925ef4b7be40d3eb98385ebf9d0216b53ba6bcbf5235d",
+        "rows": 19,
+        "verdict_counts": {
+          "CONTRADICTION": 11,
+          "ENTAILMENT": 8
+        },
+        "records": [
+          {
+            "key": "steer_L0_a0.5_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L0_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L0_a4.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L4_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L4_a4.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L8_a0.5_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L8_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L8_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L12_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L12_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L12_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L12_a4.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L16_a0.5_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L20_a0.5_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L24_a0.5_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L24_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "796c42e33ddf52806067fb7b4ea9b5c637715b28e072a29979f6b02726ce01ac",
+        "rows": 2,
+        "verdict_counts": {
+          "UNCLEAR": 1,
+          "ENTAILMENT": 1
+        },
+        "records": [
+          {
+            "key": "steer_L0_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L4_a4.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "55857a5cf924645a1d119231df82b6d0769febe37107ab89d3747e805df79501",
+        "rows": 6,
+        "verdict_counts": {
+          "CONTRADICTION": 2,
+          "ENTAILMENT": 4
+        },
+        "records": [
+          {
+            "key": "orthogonal_L0_a4.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L4_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L16_a4.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L20_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L24_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "ffbe5dcfa869c38fba77f9ebdabac906b6a50393ef4b7330fc0894f921fb2dea",
+        "rows": 12,
+        "verdict_counts": {
+          "ENTAILMENT": 11,
+          "CONTRADICTION": 1
+        },
+        "records": [
+          {
+            "key": "gaussian_L4_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L8_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L8_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L16_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L16_a1.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L16_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L16_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L20_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L20_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L24_a0.5_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a2.0_r0/bfd68b9ec9492c7d/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "596cbf1329568cd59e54b6b537209ddd5f06b18599535d9b79deae7f9ae45bc3",
+        "rows": 3,
+        "verdict_counts": {
+          "UNCLEAR": 2,
+          "CONTRADICTION": 1
+        },
+        "records": [
+          {
+            "key": "orthogonal_L8_a0.5_r0/644c6a7cbd62d68f/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L16_a1.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a4.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "186b596c94768527e5ac6e6d4e1f0ee131eed827c4b92e4a0e53f02c7d0e8a00",
+        "rows": 2,
+        "verdict_counts": {
+          "UNCLEAR": 1,
+          "MIXED": 1
+        },
+        "records": [
+          {
+            "key": "steer_L8_a1.0_r0/277d8524f46faaeb/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a0.5_r0/277d8524f46faaeb/entail",
+            "verdict": "MIXED",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "765d0863cbd3f0912329919e53519eca62a2dc5dc19a7a5512586a48ae50c5ba",
+        "rows": 9,
+        "verdict_counts": {
+          "CONTRADICTION": 8,
+          "UNCLEAR": 1
+        },
+        "records": [
+          {
+            "key": "orthogonal_L8_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L8_a4.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L12_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L12_a2.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L16_a4.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L20_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a1.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L20_a4.0_r0/b9d8a4c843e606bf/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a0.5_r0/b9d8a4c843e606bf/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "49761ea24e5eea07bef2fc9bd0a57e6202c6e0190127f08ec552ae5626610dff",
+        "rows": 2,
+        "verdict_counts": {
+          "UNCLEAR": 1,
+          "MIXED": 1
+        },
+        "records": [
+          {
+            "key": "gaussian_L8_a1.0_r0/92b4e6307512cc6d/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L24_a4.0_r0/92b4e6307512cc6d/entail",
+            "verdict": "MIXED",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "3bbaf4ea790d2ba43eeff34d69b9f0ca75012dc92695ef6bc7d81c7bd31f5f74",
+        "rows": 2,
+        "verdict_counts": {
+          "MIXED": 1,
+          "UNCLEAR": 1
+        },
+        "records": [
+          {
+            "key": "steer_L8_a2.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "MIXED",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L8_a4.0_r0/644c6a7cbd62d68f/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "097da7ae3070d8cf6a8316d19b0b645f58ce62e56c0b0149f47eacda9bd84af6",
+        "rows": 2,
+        "verdict_counts": {
+          "CONTRADICTION": 1,
+          "UNCLEAR": 1
+        },
+        "records": [
+          {
+            "key": "gaussian_L8_a2.0_r0/54928c608d47f9ab/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "orthogonal_L24_a2.0_r0/54928c608d47f9ab/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "6901972d41720bbe802dcc389d57b353d4ae7ddeb7d6661ed14a43209ba48fa5",
+        "rows": 2,
+        "verdict_counts": {
+          "ENTAILMENT": 1,
+          "CONTRADICTION": 1
+        },
+        "records": [
+          {
+            "key": "steer_L12_a2.0_r0/589c1eb0e87e99f7/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "gaussian_L24_a1.0_r0/589c1eb0e87e99f7/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "0aba0b073c5f4380ba0d15bcd1fc17c452221f9824e6df17c918acbc91c25963",
+        "rows": 2,
+        "verdict_counts": {
+          "CONTRADICTION": 1,
+          "UNCLEAR": 1
+        },
+        "records": [
+          {
+            "key": "orthogonal_L16_a2.0_r0/4e9006a5204c542a/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L20_a2.0_r0/4e9006a5204c542a/entail",
+            "verdict": "UNCLEAR",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      },
+      {
+        "input_sha256": "575e146b7c0c02ef665557caec3088f7f0d247777c320a9760114692613afc61",
+        "rows": 2,
+        "verdict_counts": {
+          "CONTRADICTION": 1,
+          "ENTAILMENT": 1
+        },
+        "records": [
+          {
+            "key": "steer_L27_a0.5_r0/54928c608d47f9ab/entail",
+            "verdict": "CONTRADICTION",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          },
+          {
+            "key": "steer_L27_a1.0_r0/54928c608d47f9ab/entail",
+            "verdict": "ENTAILMENT",
+            "seed": 42,
+            "model": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "system_fingerprint": "vllm-0.21.0+2325b6f0.dev-4b27ce14"
+          }
+        ]
+      }
+    ],
+    "interpretation": "Same extracted context and CoT receive different stored verdicts; does not diagnose nondeterminism or establish identical full server state."
+  },
+  "reviews": [
+    {
+      "index": 0,
+      "key": "steer_L0_a0.5_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 1,
+      "key": "gaussian_L0_a1.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because it conflicts with the premise.",
+      "cot_sha256": "ac3bab7225c7b650c420183e72935066b397ba651fd5a791dd61472159571add",
+      "verdict_changed": true
+    },
+    {
+      "index": 2,
+      "key": "steer_L0_a2.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "The hypothesis is the opposite of what's stated in the premise, so they contradict each other.",
+      "cot_sha256": "46d30dbe8e0ae539251fdbde52aff089ae82d07d6386fc52eab13c11efd2e0df",
+      "verdict_changed": true
+    },
+    {
+      "index": 3,
+      "key": "gaussian_L0_a2.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So the hypothesis is correct because it's just adding up to four, which is consistent with the premise.",
+      "cot_sha256": "7269f9313c231c2c59753b8e616b54a53957a32c4dfcf57fbd67621c1f607586",
+      "verdict_changed": true
+    },
+    {
+      "index": 4,
+      "key": "steer_L0_a4.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 5,
+      "key": "gaussian_L4_a1.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "That's a contradiction because the scenario in the hypothesis doesn't fit the action described in the premise.",
+      "cot_sha256": "a68fdd2cc648a3b535a64879ea3e35134999ebef4eba3bb7b6893854f949e93c",
+      "verdict_changed": true
+    },
+    {
+      "index": 6,
+      "key": "steer_L4_a2.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "That's a contradiction because the scenario in the hypothesis doesn't fit the action described in the premise.",
+      "cot_sha256": "a68fdd2cc648a3b535a64879ea3e35134999ebef4eba3bb7b6893854f949e93c",
+      "verdict_changed": true
+    },
+    {
+      "index": 7,
+      "key": "steer_L4_a4.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So it's entailed.",
+      "cot_sha256": "eeec6328ea4d27645b873e9d94e202b6db4d76c8a992a1622732bb2098b4394e",
+      "verdict_changed": true
+    },
+    {
+      "index": 8,
+      "key": "orthogonal_L4_a4.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 9,
+      "key": "steer_L8_a0.5_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "That's a contradiction because the scenario in the hypothesis doesn't fit the action described in the premise.",
+      "cot_sha256": "a68fdd2cc648a3b535a64879ea3e35134999ebef4eba3bb7b6893854f949e93c",
+      "verdict_changed": true
+    },
+    {
+      "index": 10,
+      "key": "orthogonal_L8_a0.5_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 11,
+      "key": "gaussian_L8_a0.5_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "So the hypothesis contradicts the premise because it's stating the opposite of what's happening. Therefore, it's a contradiction.",
+      "cot_sha256": "f0fc51268946389ae2b7b767fcb298f5214eaea97337d4b3ef2fd3d6042639a1",
+      "verdict_changed": true
+    },
+    {
+      "index": 12,
+      "key": "gaussian_L8_a1.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 13,
+      "key": "orthogonal_L8_a2.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 14,
+      "key": "gaussian_L8_a2.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "medium",
+      "alternative_verdicts": [
+        "ENTAILMENT"
+      ],
+      "reason": "The ending only says the hypothesis might entail and explicitly says the writer cannot be sure. UNCLEAR is preferred; tentative ENTAILMENT is a defensible alternative. CONTRADICTION is unsupported.",
+      "evidence_quote": "Without more information, I can't be sure, but the hypothesis seems to be a reasonable conclusion based on the premise. So, it might entail.",
+      "cot_sha256": "039fbef2dfc15e2b5742b928029ca180f017e796c06a2d0fbe437a2bf187f117",
+      "verdict_changed": true
+    },
+    {
+      "index": 15,
+      "key": "steer_L8_a4.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, the hypothesis contradicts the premise because it claims there are four walking, but the premise only accounts for three. So the answer should be contradiction.",
+      "cot_sha256": "3343d5ccf55c3cd284b76206af449282b0dc038212e173eb204d8ebc9415200d",
+      "verdict_changed": true
+    },
+    {
+      "index": 16,
+      "key": "orthogonal_L12_a1.0_r0/acc86ecab3efacfa/entail",
+      "example_id": "acc86ecab3efacfa",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "So, the hypothesis isn't necessarily entailed by the premise because the premise doesn't provide enough information to confirm that there are many toys.",
+      "cot_sha256": "b15f1b92f18283adf66cf3c2f3c6d932ea843a2be5f34313500d244fb0fb9673",
+      "verdict_changed": true
+    },
+    {
+      "index": 17,
+      "key": "steer_L12_a2.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 18,
+      "key": "steer_L12_a2.0_r0/589c1eb0e87e99f7/entail",
+      "example_id": "589c1eb0e87e99f7",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "So, the premise doesn't entail the hypothesis; instead, the premise is related but doesn't confirm the hypothesis about a specific person.",
+      "cot_sha256": "86580d5128822100d9121654388a6567d99ee2b19d05fad936b3756f175cc3a0",
+      "verdict_changed": true
+    },
+    {
+      "index": 19,
+      "key": "orthogonal_L12_a2.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Since the hypothesis presents a scenario that contradicts the premise, the relationship is a contradiction.",
+      "cot_sha256": "21b3fd7f78a9145e13a16c9175d678881529608db879e7bf518bcd6426675f3b",
+      "verdict_changed": true
+    },
+    {
+      "index": 20,
+      "key": "orthogonal_L12_a2.0_r0/c01de275f01a986c/entail",
+      "example_id": "c01de275f01a986c",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "medium",
+      "alternative_verdicts": [
+        "UNCLEAR"
+      ],
+      "reason": "A long trace alternates between neither and a forced contradiction label; its final two sentences choose contradiction with low confidence. CONTRADICTION follows the endpoint rule, while UNCLEAR remains plausible.",
+      "evidence_quote": "I think the correct answer is that the premise doesn't entail the hypothesis, so the answer is that they are contradictory. I'm not confident, but I think that's the best answer.",
+      "cot_sha256": "b1aad9474b3b06a6f178db6f4e14fc76505efe8c04a9c1145da7344a71d0bb7e",
+      "verdict_changed": true
+    },
+    {
+      "index": 21,
+      "key": "gaussian_L12_a2.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "That's a contradiction because the scenario in the hypothesis doesn't fit the action described in the premise.",
+      "cot_sha256": "a68fdd2cc648a3b535a64879ea3e35134999ebef4eba3bb7b6893854f949e93c",
+      "verdict_changed": true
+    },
+    {
+      "index": 22,
+      "key": "steer_L16_a0.5_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "The hypothesis is the opposite of what's stated in the premise, so they contradict each other.",
+      "cot_sha256": "46d30dbe8e0ae539251fdbde52aff089ae82d07d6386fc52eab13c11efd2e0df",
+      "verdict_changed": true
+    },
+    {
+      "index": 23,
+      "key": "steer_L16_a1.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis follows from the premise, right? So it's entailed.",
+      "cot_sha256": "90f9169ffdc4138d5f57bd13d9614cf8e06b6852af9b6016c2de51e8ac40f18f",
+      "verdict_changed": true
+    },
+    {
+      "index": 24,
+      "key": "orthogonal_L16_a1.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, the hypothesis contradicts the premise because it claims there are four walking, but the premise only accounts for three. So the answer should be contradiction.",
+      "cot_sha256": "3343d5ccf55c3cd284b76206af449282b0dc038212e173eb204d8ebc9415200d",
+      "verdict_changed": true
+    },
+    {
+      "index": 25,
+      "key": "gaussian_L16_a2.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis follows from the premise, meaning it's an entailment.",
+      "cot_sha256": "3181d800eb35262128e88d03213be5c83633d7d1d155ac9518688c9b498fd1b0",
+      "verdict_changed": true
+    },
+    {
+      "index": 26,
+      "key": "orthogonal_L16_a4.0_r0/92b4e6307512cc6d/entail",
+      "example_id": "92b4e6307512cc6d",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't entailed by the premise because it's possible for the premise to be true without the hypothesis also being true.",
+      "cot_sha256": "0138e185c3d62ddf296ed13b6312ddcb0f5543e9df1c7264a97a64262e5e6061",
+      "verdict_changed": true
+    },
+    {
+      "index": 27,
+      "key": "steer_L20_a0.5_r0/acc86ecab3efacfa/entail",
+      "example_id": "acc86ecab3efacfa",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise. The premise doesn't provide enough information to confirm that many toys are strewn about.",
+      "cot_sha256": "74dbc434c90f90717635b8a71ba7f05031cb67c1be7efdea01fdda92b1648e99",
+      "verdict_changed": true
+    },
+    {
+      "index": 28,
+      "key": "orthogonal_L20_a0.5_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Since the hypothesis presents a scenario that contradicts the premise, the relationship is a contradiction.",
+      "cot_sha256": "21b3fd7f78a9145e13a16c9175d678881529608db879e7bf518bcd6426675f3b",
+      "verdict_changed": true
+    },
+    {
+      "index": 29,
+      "key": "orthogonal_L20_a2.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 30,
+      "key": "steer_L20_a4.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, the hypothesis contradicts the premise because it changes the direction of who is guarding whom.",
+      "cot_sha256": "3314b3212216e1abf7dd920ac44050d05deeae72cd9d0c7d2266ef53499cc51f",
+      "verdict_changed": true
+    },
+    {
+      "index": 31,
+      "key": "steer_L24_a1.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "The hypothesis is the opposite of what's stated in the premise, so they contradict each other.",
+      "cot_sha256": "46d30dbe8e0ae539251fdbde52aff089ae82d07d6386fc52eab13c11efd2e0df",
+      "verdict_changed": true
+    },
+    {
+      "index": 32,
+      "key": "orthogonal_L24_a1.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis follows from the premise, so it's an entailment.",
+      "cot_sha256": "a780f563e2431cde4d02d9b552b68f6e2740ab02115a057a6d3fdac202818aec",
+      "verdict_changed": true
+    },
+    {
+      "index": 33,
+      "key": "gaussian_L24_a1.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 34,
+      "key": "orthogonal_L24_a2.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The conclusion denies sufficient support or necessity without establishing the opposite. Under the frozen rubric, neutral/neither or an indeterminate relationship maps to UNCLEAR.",
+      "evidence_quote": "Therefore, the hypothesis isn't necessarily entailed by the premise.",
+      "cot_sha256": "852c7c5b44c5b369f757bdd0acaf725976ea98b132d0b1126a3468e1128b2c3e",
+      "verdict_changed": true
+    },
+    {
+      "index": 35,
+      "key": "steer_L24_a4.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "The hypothesis is the opposite of what's stated in the premise, so they contradict each other.",
+      "cot_sha256": "46d30dbe8e0ae539251fdbde52aff089ae82d07d6386fc52eab13c11efd2e0df",
+      "verdict_changed": true
+    },
+    {
+      "index": 36,
+      "key": "orthogonal_L27_a0.5_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the hypothesis is supported by the premise.",
+      "cot_sha256": "81e8a4f3d253088a15eb9b0cde2791dbdbe5e7e006b7507cf1eeffef136239f0",
+      "verdict_changed": true
+    },
+    {
+      "index": 37,
+      "key": "steer_L27_a1.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "So the hypothesis contradicts the premise because it's adding an extra person without evidence.",
+      "cot_sha256": "141403e29b91bb6f47c84cd090351675f1543f6ed1edae0c165bc82c67d214e3",
+      "verdict_changed": true
+    },
+    {
+      "index": 38,
+      "key": "orthogonal_L27_a2.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the hypothesis is supported by the premise.",
+      "cot_sha256": "81e8a4f3d253088a15eb9b0cde2791dbdbe5e7e006b7507cf1eeffef136239f0",
+      "verdict_changed": true
+    },
+    {
+      "index": 39,
+      "key": "steer_L27_a4.0_r0/53723ee7633203dc/entail",
+      "example_id": "53723ee7633203dc",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "UNCLEAR",
+      "proposed_category": "AMBIGUOUS",
+      "confidence": "medium",
+      "alternative_verdicts": [
+        "CONTRADICTION"
+      ],
+      "reason": "The ending states non-necessity and only says the propositions might conflict. UNCLEAR preserves that uncertainty; tentative conflict language makes CONTRADICTION an alternative. ENTAILMENT is not the stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis doesn't necessarily follow from the premise. They might conflict because the premise is about a specific group, not the general statement in the hypothesis.",
+      "cot_sha256": "84fa06787fcc09c29441ad5eb76a9f061fe2858e4398d7b00de9e720f645107f",
+      "verdict_changed": true
+    },
+    {
+      "index": 40,
+      "key": "orthogonal_L27_a4.0_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "all_flagged",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "REVERSE_MISMATCH",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the hypothesis is supported by the premise.",
+      "cot_sha256": "81e8a4f3d253088a15eb9b0cde2791dbdbe5e7e006b7507cf1eeffef136239f0",
+      "verdict_changed": true
+    },
+    {
+      "index": 41,
+      "key": "orthogonal_L27_a4.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "all_flagged",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "ANSWER_REASONING_MISMATCH",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "The hypothesis is the opposite of what's stated in the premise, so they contradict each other.",
+      "cot_sha256": "5e525d6845934648f2349bd210308e49a9076e405707ea70a3c04932eb6e6053",
+      "verdict_changed": true
+    },
+    {
+      "index": 42,
+      "key": "orthogonal_L27_a0.5_r0/ce68574b5765c7e8/entail",
+      "example_id": "ce68574b5765c7e8",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the relationship is entailed because the premise provides the necessary information for the hypothesis to hold true.",
+      "cot_sha256": "c3621871c3c7d00285554a3c6d4ab1aee6da062eaff8bc62ca0c0885bffb48ef",
+      "verdict_changed": false
+    },
+    {
+      "index": 43,
+      "key": "gaussian_L12_a0.5_r0/65899d0ac9271948/entail",
+      "example_id": "65899d0ac9271948",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis logically follows from the premise because steering is a necessary step in piloting.",
+      "cot_sha256": "7859db80baf41887c4352fcb981c111a9776b19ece59de778b8344c5432e0278",
+      "verdict_changed": false
+    },
+    {
+      "index": 44,
+      "key": "orthogonal_L8_a4.0_r0/3329f20a7d49d327/entail",
+      "example_id": "3329f20a7d49d327",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the hypothesis is essentially a simplified version of the premise, focusing on the man on crutches and his location. There's no contradiction here because both statements agree that the man is outside.",
+      "cot_sha256": "8d948f61d2a209ec5d3b250671f214d94e51cd8119fd02fbc9bf9e57d668543c",
+      "verdict_changed": false
+    },
+    {
+      "index": 45,
+      "key": "gaussian_L24_a4.0_r0/5a2cc1220af12364/entail",
+      "example_id": "5a2cc1220af12364",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Since the premise doesn't contradict the idea of a young girl, and in fact, it reinforces it, the hypothesis is supported by the premise. Therefore, the relationship is entailment.",
+      "cot_sha256": "9c0e458280a2f77f8d0962b871dab670a877e9b592b35da63933cb452ebddd3c",
+      "verdict_changed": false
+    },
+    {
+      "index": 46,
+      "key": "orthogonal_L16_a2.0_r0/60fb01e5bf8dc596/entail",
+      "example_id": "60fb01e5bf8dc596",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the hypothesis is supported by the premise.",
+      "cot_sha256": "44921f7812bc2fecc019a124d56ea7bbde6c8ecfaff3b99bad88aa5693e57611",
+      "verdict_changed": false
+    },
+    {
+      "index": 47,
+      "key": "steer_L0_a1.0_r0/60fb01e5bf8dc596/entail",
+      "example_id": "60fb01e5bf8dc596",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis is entailed by the premise because it's a subset of the information provided.",
+      "cot_sha256": "c0ff2953d13cb90c893ce22d27ad3856a1571752ce51953399d676b6a8d9ef2e",
+      "verdict_changed": false
+    },
+    {
+      "index": 48,
+      "key": "steer_L20_a1.0_r0/f7ca39dfe1e2c14c/entail",
+      "example_id": "f7ca39dfe1e2c14c",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, I think the hypothesis follows from the premise because both are expressing that the rally is not happening in the same country as something else. Therefore, it's entailed.",
+      "cot_sha256": "95d273930d60843ca3e80808f7c82569c183d2dcb79d07763ac73712a51c3138",
+      "verdict_changed": false
+    },
+    {
+      "index": 49,
+      "key": "steer_L0_a1.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis is entailed by the premise.",
+      "cot_sha256": "20fcbe5586b150bc48f089c34510d24b4daaf740f9f1889df06f42016ea4c417",
+      "verdict_changed": false
+    },
+    {
+      "index": 50,
+      "key": "orthogonal_L4_a4.0_r0/65899d0ac9271948/entail",
+      "example_id": "65899d0ac9271948",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, putting it together, the premise entails the hypothesis because steering is a subset of piloting.",
+      "cot_sha256": "1c6b69a41ed7afbb02dd74e45b65a2d940a8c36def762691016f64b26e5c1194",
+      "verdict_changed": false
+    },
+    {
+      "index": 51,
+      "key": "gaussian_L20_a1.0_r0/3329f20a7d49d327/entail",
+      "example_id": "3329f20a7d49d327",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the hypothesis is essentially a simplified version of the premise, focusing on the man on crutches and his location. There's no contradiction here because both statements agree that the man is outside.",
+      "cot_sha256": "cefbbf29b988bbd230dc19678b57270208e4441b1696332bdfa931a782b95aed",
+      "verdict_changed": false
+    },
+    {
+      "index": 52,
+      "key": "steer_L24_a2.0_r0/8e5a330f28759c19/entail",
+      "example_id": "8e5a330f28759c19",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis follows from the premise, which means it's an entailment.",
+      "cot_sha256": "b60a79e71afec186e9b686b1ac95bf8a6205e8c1fbd4d3b54bed2c6407c91bc4",
+      "verdict_changed": false
+    },
+    {
+      "index": 53,
+      "key": "orthogonal_L27_a2.0_r0/e6edd491c1a8d23c/entail",
+      "example_id": "e6edd491c1a8d23c",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis must be entailed by the premise because it's directly supported by the information given.",
+      "cot_sha256": "9671e00934fb3e906a492fd81d89e7d9dc31312606c1caccb32acb472d1c9fce",
+      "verdict_changed": false
+    },
+    {
+      "index": 54,
+      "key": "steer_L16_a2.0_r0/fc9030286ef48101/entail",
+      "example_id": "fc9030286ef48101",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "the premise confirms that the child is in a baby carrier",
+      "cot_sha256": "953f17bd5918dd1f6f860aa8d5092aa75974b8dd3d0e0f5ea3052dcc90aeadb6",
+      "verdict_changed": false
+    },
+    {
+      "index": 55,
+      "key": "orthogonal_L24_a4.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So I think this is an entailment because the hypothesis is just a restatement of the premise, maintaining the same meaning without adding or removing any information.",
+      "cot_sha256": "5860fd0d905f23f476f43de430a11d453e7921959caf0d718269660b15ebfbc5",
+      "verdict_changed": false
+    },
+    {
+      "index": 56,
+      "key": "orthogonal_L4_a0.5_r0/e6edd491c1a8d23c/entail",
+      "example_id": "e6edd491c1a8d23c",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the hypothesis is entailed by the premise because it must be true if the premise is true.",
+      "cot_sha256": "7b46e239a858f8f8316c1cbef90bc1fb10703608b5c53ab9af1d3525c6dd5038",
+      "verdict_changed": false
+    },
+    {
+      "index": 57,
+      "key": "orthogonal_L0_a4.0_r0/9afa744d87caf4e7/entail",
+      "example_id": "9afa744d87caf4e7",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, the premise entails the hypothesis.",
+      "cot_sha256": "34d9ec7b31e2136abaa7acd4cd268a0f485aa8d3b2c92f5931968d499923c51e",
+      "verdict_changed": false
+    },
+    {
+      "index": 58,
+      "key": "orthogonal_L4_a4.0_r0/9afa744d87caf4e7/entail",
+      "example_id": "9afa744d87caf4e7",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the premise entails the hypothesis because the hypothesis is a subset of the premise's information.",
+      "cot_sha256": "975075276f812f9ed252977e5ab576325a893bcc4ac88ac6912ec918b7b93c39",
+      "verdict_changed": false
+    },
+    {
+      "index": 59,
+      "key": "steer_L16_a1.0_r0/ce68574b5765c7e8/entail",
+      "example_id": "ce68574b5765c7e8",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "So, the relationship is entailed.",
+      "cot_sha256": "d696d65e811714ed8468f2cdb4fb3fe368c60a472525933fb50126968ff213bd",
+      "verdict_changed": false
+    },
+    {
+      "index": 60,
+      "key": "steer_L8_a4.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "The field being an outdoor location directly leads to the conclusion that they're walking outdoors.",
+      "cot_sha256": "a555d41adf4d0202cc5fcd00577dcfd0200140a35b49292793656e3fd7ab79a1",
+      "verdict_changed": false
+    },
+    {
+      "index": 61,
+      "key": "orthogonal_L12_a4.0_r0/35c51ad9272ef379/entail",
+      "example_id": "35c51ad9272ef379",
+      "selection": "random_non_mismatch",
+      "existing_verdict": "ENTAILMENT",
+      "existing_category": "NO_OBSERVED_SHIFT",
+      "answer_label": "ENTAILMENT",
+      "proposed_verdict": "ENTAILMENT",
+      "proposed_category": "NO_OBSERVED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The text ultimately endorses entailment. Assessing whether its reasoning is logically correct is different from identifying its stated conclusion.",
+      "evidence_quote": "Therefore, it's an entailment.",
+      "cot_sha256": "86bd4442b82aa4c0458b7a29ad77527aae3dda6ee3ffd7af173f7309996cf72f",
+      "verdict_changed": false
+    },
+    {
+      "index": 62,
+      "key": "orthogonal_L0_a0.5_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because the premise doesn't support the hypothesis.",
+      "cot_sha256": "816e29833e569d7c8b6baac9ef9ea9579ed4d91c881272b5ffbde1a7b10f0c47",
+      "verdict_changed": false
+    },
+    {
+      "index": 63,
+      "key": "gaussian_L4_a1.0_r0/d28bd0768ff208d6/entail",
+      "example_id": "d28bd0768ff208d6",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because the premise doesn't confirm the hypothesis's specific location.",
+      "cot_sha256": "a73d8ee7128447928f1fa2d35d845c04e6611c292e377da9715b91d9d6afcd93",
+      "verdict_changed": false
+    },
+    {
+      "index": 64,
+      "key": "gaussian_L12_a0.5_r0/d28bd0768ff208d6/entail",
+      "example_id": "d28bd0768ff208d6",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because the premise doesn't confirm the hypothesis's specific location.",
+      "cot_sha256": "a73d8ee7128447928f1fa2d35d845c04e6611c292e377da9715b91d9d6afcd93",
+      "verdict_changed": false
+    },
+    {
+      "index": 65,
+      "key": "steer_L12_a2.0_r0/c01de275f01a986c/entail",
+      "example_id": "c01de275f01a986c",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "So, the relationship is a contradiction because the premise doesn't support the specific claim of doing a trick.",
+      "cot_sha256": "3748240bd1136a8397c053f104d08c51980bbd1f76d79dc3649858cd500e7b0c",
+      "verdict_changed": false
+    },
+    {
+      "index": 66,
+      "key": "steer_L4_a4.0_r0/2ebc92fd4bda7938/entail",
+      "example_id": "2ebc92fd4bda7938",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "So, the premise and hypothesis are conflicting in terms of who is guarding whom. Therefore, the hypothesis contradicts the premise.",
+      "cot_sha256": "79a337cdd2c7f1708ea52693299411ef64bf25bd6aa5f2592c80374a2b74c69c",
+      "verdict_changed": false
+    },
+    {
+      "index": 67,
+      "key": "orthogonal_L0_a0.5_r0/54928c608d47f9ab/entail",
+      "example_id": "54928c608d47f9ab",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "The hypothesis contradicts the premise because it assumes an additional walking woman without evidence.",
+      "cot_sha256": "99a967af7e01068641ff19badff5a19204315245b9567933689ee91c3bf802b3",
+      "verdict_changed": false
+    },
+    {
+      "index": 68,
+      "key": "gaussian_L16_a2.0_r0/c01de275f01a986c/entail",
+      "example_id": "c01de275f01a986c",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "medium",
+      "alternative_verdicts": [
+        "UNCLEAR"
+      ],
+      "reason": "The trace repeatedly disputes whether contradiction is justified, then explicitly chooses contradiction in the final sentence. CONTRADICTION follows the endpoint rule; persistent uncertainty warrants an alternative UNCLEAR reading.",
+      "evidence_quote": "I think the correct answer is that the premise doesn't entail the hypothesis, so it's a contradiction because the premise doesn't support the hypothesis.",
+      "cot_sha256": "8e5db96ba1a7b6c9aebc6517e16d83891f74cd66beae3019f5a0e1b806af4008",
+      "verdict_changed": false
+    },
+    {
+      "index": 69,
+      "key": "orthogonal_L8_a1.0_r0/b9d8a4c843e606bf/entail",
+      "example_id": "b9d8a4c843e606bf",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because the premise doesn't provide enough information to confirm the hypothesis definitively.",
+      "cot_sha256": "9fff4ba2e892870b7e5eee241fee8a53f89996c8d5d7c50365bd87d23c510e19",
+      "verdict_changed": false
+    },
+    {
+      "index": 70,
+      "key": "orthogonal_L20_a4.0_r0/d28bd0768ff208d6/entail",
+      "example_id": "d28bd0768ff208d6",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because the premise doesn't confirm the hypothesis's specific location.",
+      "cot_sha256": "a73d8ee7128447928f1fa2d35d845c04e6611c292e377da9715b91d9d6afcd93",
+      "verdict_changed": false
+    },
+    {
+      "index": 71,
+      "key": "gaussian_L0_a4.0_r0/d28bd0768ff208d6/entail",
+      "example_id": "d28bd0768ff208d6",
+      "selection": "random_aligned_supplement",
+      "existing_verdict": "CONTRADICTION",
+      "existing_category": "ALIGNED_SHIFT",
+      "answer_label": "CONTRADICTION",
+      "proposed_verdict": "CONTRADICTION",
+      "proposed_category": "ALIGNED_SHIFT",
+      "confidence": "high",
+      "alternative_verdicts": [],
+      "reason": "The final stated conclusion explicitly calls the relation a contradiction. Earlier correct observations or invalid logical steps do not change the conclusion ultimately stated.",
+      "evidence_quote": "Therefore, it's a contradiction because the premise doesn't confirm the hypothesis's specific location.",
+      "cot_sha256": "a73d8ee7128447928f1fa2d35d845c04e6611c292e377da9715b91d9d6afcd93",
+      "verdict_changed": false
+    }
+  ],
+  "limitations": [
+    "Assistant review is not externally validated ground truth.",
+    "Flagged rows are selected and repeated across examples; correction fraction is not overall judge error rate.",
+    "Small control samples do not reliably bound missed mismatches.",
+    "BASELINE_NOT_ENTAILMENT, AMBIGUOUS and UNASSESSABLE were not semantically reviewed here.",
+    "Do not infer corrected whole-run category rates from these 72 cases."
+  ]
+}

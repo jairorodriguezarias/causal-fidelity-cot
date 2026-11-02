@@ -1,0 +1,45 @@
+\begin{thebibliography}{1}
+
+\bibitem{arcuschin2025}
+Iv{\'a}n Arcuschin, Jett Janiak, Robert Krzyzanowski, Senthooran Rajamanoharan,
+  Neel Nanda, and Arthur Conmy.
+\newblock Chain-of-thought reasoning in the wild is not always faithful.
+\newblock {\em arXiv preprint arXiv:2503.08679}, 2025.
+\newblock Version 6, revised June 2026.
+
+\bibitem{bowman2015}
+Samuel~R. Bowman, Gabor Angeli, Christopher Potts, and Christopher~D. Manning.
+\newblock A large annotated corpus for learning natural language inference.
+\newblock In {\em Proceedings of the 2015 Conference on Empirical Methods in
+  Natural Language Processing}, 2015.
+
+\bibitem{cox2026}
+Kyle Cox, Darius Kianersi, and Adri{\`a} Garriga-Alonso.
+\newblock Post-hoc reasoning in chain of thought: Decoding and steering
+  pre-committed answers.
+\newblock {\em arXiv preprint arXiv:2603.01437}, 2026.
+
+\bibitem{deepseek2025}
+{DeepSeek-AI} et~al.
+\newblock Deepseek-r1: Incentivizing reasoning capability in {LLMs} via
+  reinforcement learning.
+\newblock {\em arXiv preprint arXiv:2501.12948}, 2025.
+
+\bibitem{jia2026}
+Jinghan Jia, Joe Benton, and Eric Easley.
+\newblock Faithfulness as information flow: Evaluating and training faithful
+  chain-of-thought reasoning.
+\newblock {\em arXiv preprint arXiv:2605.24286}, 2026.
+
+\bibitem{lanham2023}
+Tamera Lanham, Anna Chen, Ansh Radhakrishnan, et~al.
+\newblock Measuring faithfulness in chain-of-thought reasoning.
+\newblock {\em arXiv preprint arXiv:2307.13702}, 2023.
+
+\bibitem{qwq2025}
+{Qwen Team}.
+\newblock {QwQ-32B}: Embracing the power of reinforcement learning, 2025.
+\newblock Training stages also documented in the official model card at
+  https://huggingface.co/Qwen/QwQ-32B.
+
+\end{thebibliography}

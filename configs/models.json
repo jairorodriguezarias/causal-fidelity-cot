@@ -1,0 +1,6 @@
+{
+  "distill-1.5b": {"id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B", "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562", "training": "distilled_sft", "quantization": "none"},
+  "distill-7b": {"id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B", "revision": "916b56a44061fd5cd7d6a8fb632557ed4f724f60", "training": "distilled_sft", "quantization": "nf4"},
+  "distill-32b": {"id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B", "revision": "711ad2ea6aa40cfca18895e8aca02ab92df1a746", "training": "distilled_sft", "quantization": "nf4"},
+  "qwq-32b": {"id": "Qwen/QwQ-32B", "revision": "976055f8c83f394f35dbd3ab09a285a984907bd0", "training": "sft_and_rl", "quantization": "nf4"}
+}

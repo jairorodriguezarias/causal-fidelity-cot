@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-09-25T21:12:48.499276+00:00",
+  "returncode": 0,
+  "stdout": ".............................                                            [100%]\n29 passed in 2.01s\n",
+  "stderr": "",
+  "source_sha256": {
+    "dataset_builder.py": "59670e81ccac5c3f1ac74dd6a09b6274ab8344fd3f6792977c875bf74f6ca5b2",
+    "compare.py": "1e75c8197a5474233245f68f3eae7435d9834b2078f9d91544c7785a00229603",
+    "experiment.py": "6aa2711112bae80f995f410bb47cb4f92199622dd449c5a77baabed3d0869712",
+    "rejudge.py": "a4a12879b3e29850f4fef21d6c72ec1b4002f4b61f8e1e72f25348d7ca3d55bd",
+    "llm_judge.py": "5421a65215d7e05574f31e69c5e50e39f50c82a0ac7343b38579d7c9bbf97b37",
+    "evaluation.py": "8cf77b78112c7fb491d5081233c2d0264bef9bb3c2d752bb27e7baa0d3b3759e",
+    "analyze.py": "1124c1fde0df4f5f170f69f6a6637b2f2b4798eda47fdc25bf450e8df27f70cf",
+    "scripts/record_tests.py": "ce9ae651a1d306ceb185f3abcc7fe9739ac69ed25b6b6baa9c10082c95115e34",
+    "scripts/start_study.py": "4ea5cb5ba6e945d23d27d96dbf5b4b7ef3035184faf6dfd61f8a2d1046ee7a48",
+    "scripts/download_models.py": "5443b9f77052c07b2f7f5da4e8b4da33643c462d39f1f8fea529ecdec7c7d972",
+    "scripts/run_campaign.py": "794484a41769363471f64384532ba16c4ee46ccdea5c2acd2eeb6e5f698f6d15",
+    "scripts/build_paper.py": "e5c1d9d69c095b39b7330ae8374d489ed5077c6e24e45b3fe05e116f4d587d8a",
+    "scripts/audit_run.py": "59893156efc09a010d3f1e5c449be3584cef1b7a5add8410423176f40d27612e",
+    "scripts/audit_release.py": "b46f929ecfce8e42fd43d1c02b0c467b53441dbe45ff19bedefe30f4bbf41267",
+    "tests/test_core.py": "76a853d7d523b42abc0993d619219b1a4e074675b6699eae2a9c284e98e724cb",
+    "tests/test_analysis.py": "5ce61c349203815cf67021e31d211cda417d9e43ab81e3b7fef92272fc3e73ca",
+    "tests/test_release_gate.py": "6bf76df07beae98add41686011409f307192812f14c42defa85739cb4a50d9a0",
+    "tests/test_judge.py": "d2d551f5d31c9d72e35955353d7880c8bb74555e5e4e84a0c7543b3891d17963"
+  }
+}

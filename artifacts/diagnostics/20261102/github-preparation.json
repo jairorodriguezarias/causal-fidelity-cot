@@ -1,0 +1,81 @@
+{
+  "checked_at": "2026-11-02T11:08:50.098072+00:00",
+  "scope": "GitHub source preparation; study remains incomplete; no inference run started",
+  "branch": "prepare-github-20261102",
+  "protected_sha256_unchanged": {
+    "experiment.py": "6aa2711112bae80f995f410bb47cb4f92199622dd449c5a77baabed3d0869712",
+    "dataset_builder.py": "59670e81ccac5c3f1ac74dd6a09b6274ab8344fd3f6792977c875bf74f6ca5b2",
+    "evaluation.py": "8cf77b78112c7fb491d5081233c2d0264bef9bb3c2d752bb27e7baa0d3b3759e",
+    "llm_judge.py": "5421a65215d7e05574f31e69c5e50e39f50c82a0ac7343b38579d7c9bbf97b37",
+    "rejudge.py": "a4a12879b3e29850f4fef21d6c72ec1b4002f4b61f8e1e72f25348d7ca3d55bd",
+    "analyze.py": "1124c1fde0df4f5f170f69f6a6637b2f2b4798eda47fdc25bf450e8df27f70cf",
+    "compare.py": "1e75c8197a5474233245f68f3eae7435d9834b2078f9d91544c7785a00229603",
+    "scripts/audit_run.py": "59893156efc09a010d3f1e5c449be3584cef1b7a5add8410423176f40d27612e",
+    "configs/study.json": "da3d5005a0a7a21c016c9aba331c20e037949b17f2f6c4a2f131ca87e396c0e0",
+    "configs/models.json": "4cc5047e46f68d1ccd72428e08100c63d6f6038a251f4e891a8c0e73cd3e741b",
+    "artifacts/dataset.json": "a70ad2fdf8be19cd042584969296e94adc1ab14665a5f39b1b04990e21bb71a6",
+    "artifacts/protocol-freeze.json": "611448a3a158e8bc754a3d31b77060b05f480891ecf3487b073b9067b8c182bf",
+    "scripts/run_campaign.py": "46c058624489f2bebd537de61931ff13c9add41a76cb48bda0d8b8847b23e226",
+    "scripts/campaign_resources.py": "31e04d157f4810b528e7d02a76eccc42e4ac3bc641ed695775a9fbc579affcdb",
+    "scripts/download_models.py": "5443b9f77052c07b2f7f5da4e8b4da33643c462d39f1f8fea529ecdec7c7d972",
+    "scripts/record_tests.py": "ce9ae651a1d306ceb185f3abcc7fe9739ac69ed25b6b6baa9c10082c95115e34"
+  },
+  "campaign": {
+    "pid": 2476751,
+    "stage": "distill-32b-generate",
+    "models": {
+      "distill-7b": {
+        "state": "complete",
+        "records": 5229,
+        "updated": "2026-09-26T12:19:11.798028+00:00"
+      },
+      "distill-32b": {
+        "state": "running",
+        "records": 2282,
+        "updated": "2026-11-02T10:57:48.280260+00:00"
+      },
+      "qwq-32b": {
+        "state": "pending"
+      }
+    }
+  },
+  "tests": {
+    "working_tree": {
+      "passed": 48,
+      "skipped": 0
+    },
+    "clean_export": {
+      "passed": 48,
+      "skipped": 0,
+      "runs_or_model_cache_present": false,
+      "gpu_visible": false,
+      "huggingface_offline": true
+    },
+    "environment": "Existing prepared Python environment; not a fresh dependency installation"
+  },
+  "notebook": {
+    "cells": 28,
+    "embedded_sources_match": true,
+    "deterministic_rebuild": true,
+    "executed_in_colab": false
+  },
+  "figures": {
+    "records_verified": 5229,
+    "activation_contrasts": 64,
+    "text_contrasts": 13,
+    "csv_exports_identical": true
+  },
+  "builds": {
+    "interim_pdf": true,
+    "main_draft_pdf": true,
+    "extracted_main_source_archive_compiles": true,
+    "reproduction_bundle_checksums_verified": true,
+    "output_location": "Temporary isolated copies"
+  },
+  "limitations": [
+    "Full 32B comparison remains incomplete",
+    "Reasoning labels require independent human validation",
+    "Raw runs are excluded from Git",
+    "Credential checks cover selected patterns only"
+  ]
+}

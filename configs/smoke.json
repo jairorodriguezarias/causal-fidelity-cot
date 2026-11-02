@@ -1,0 +1,17 @@
+{
+  "train_pairs": 16,
+  "evaluation_split": "calibration",
+  "eval_pairs": 4,
+  "layer_fractions": [0.0, 0.5, 1.0],
+  "alphas": [1.0],
+  "modes": ["steer", "orthogonal", "gaussian"],
+  "control_replicates": 1,
+  "seed": 42,
+  "batch_size": 4,
+  "k_tokens": 15,
+  "generation": {"max_new_tokens": 1024, "do_sample": true, "temperature": 0.6, "top_p": 0.95, "top_k": 20},
+  "text_interventions": true,
+  "truncation_fractions": [0.0, 0.25, 0.5, 0.75, 1.0],
+  "swap_cot": true,
+  "answer_max_tokens": 128
+}

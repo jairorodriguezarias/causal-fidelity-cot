@@ -1,0 +1,30 @@
+{
+  "train_pairs": 500,
+  "evaluation_split": "calibration",
+  "eval_pairs": 20,
+  "layer_fractions": [],
+  "alphas": [],
+  "modes": [],
+  "control_replicates": 1,
+  "seed": 42,
+  "batch_size": 8,
+  "k_tokens": 15,
+  "generation": {
+    "max_new_tokens": 2048,
+    "do_sample": true,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "top_k": 20
+  },
+  "text_interventions": false,
+  "truncation_fractions": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "swap_cot": true,
+  "answer_max_tokens": 128,
+  "both_baseline_variants": true
+}
